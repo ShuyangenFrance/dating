@@ -25,8 +25,19 @@ def data(filename):
         returnMat[index,:] = listFromLine[0:3]
         classLabelVector.append(listFromLine[-1])
         index += 1
-    return returnMat, classLabelVector
+    m= np.shape(classLabelVector)[0] 
+    return returnMat, np.reshape(classLabelVector,(m,1))
 
+def labeltonumber(label):
+    m=np.shape(label)[0]
+    labelvalue= np.ones((m,1))
+    for i in range(np.shape(label)[0]):
+        if label[i]=='didntLike':
+            labelvalue[i,0] = -1 
+        elif label[i] =='smallDoses':
+            labelvalue[i,0]=0
+    return labelvalue
+            
 def persondata(rangedata,datamin):
     video = float(input(\
                  "percentage of time playing video games?"))
@@ -44,9 +55,11 @@ def tellperson(filename):
     return classresult
     
 
-classresult=tellperson('datingdata.txt')
-print(classresult)
-    
+#classresult=tellperson('datingdata.txt')
+returnMat, classLabelVector=data('datingdata.txt')
+labelvalue=labeltonumber(classLabelVector)
+colors= np.array(labelvalue[:,0])
+plt.scatter(returnMat[:,1],returnMat[:,2],c=colors)
 
 
 
